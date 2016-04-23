@@ -13,6 +13,7 @@ $( document ).ready(function() {
         greatest: 0,
         total: 0
     };
+
     // Place all your Javascript code inside this "document ready" function so
     // it does not run until the DOM is ready for Javascript manipulation.
 
@@ -23,6 +24,11 @@ $( document ).ready(function() {
     //      (NOTE: You do not have to perform any validation on the data as
     //          a base requirement.)
 
+$('#login-form .btn').on('click', function(event){
+    $('#login-form').hide();
+    $('.user-info').show();
+    $('span.user-fullname').text(userInfo.firstName + ' ' + userInfo.lastName);
+});
 
     // TODO: Create a function to listen for clicks on all the "View Details"
     // buttons so that when a user clicks a "View Details" button they see
@@ -34,6 +40,21 @@ $( document ).ready(function() {
     //      4. Change the text of the "view details" button to read "hide details" so the user
     //          understands they can hide the text again.
 
+$('.view-details').on('click', function(event){
+    console.log(event);
+    var targetElement = event.target;
+    var container = targetElement.parentElement.parentElement;
+    $(container).find('.details').each(function(index, el){
+        if ($(el).is(':visible')){
+            $(el).fadeOut();
+            targetElement.innerText = "View Details"
+        } else {
+            $(el).fadeIn();
+            targetElement.innerText = "Hide Details"
+        }
+    });
+});
+
     // TODO: Create a function that listens for clicks on the voting buttons and
     // looks at the `data-vote` attribute on each button to see what was voted for,
     // then determines the updated vote breakdown to adjust the progress bars.
@@ -43,5 +64,23 @@ $( document ).ready(function() {
     //      3. Increment the counter for whichever vote talley is affected.
     //      4. Determine the respective percentages (out of 100) for each progress bar.
     //      5. Modify the `width` attribute on each progress bar to set the updated percentage.
+
+$('.voting button').on('click', function(event){
+    if($(this).attr('data-vote') === 'great'){
+        ++voteCounts.great;
+    } else {
+        ++voteCounts.greatest;
+    }
+
+    ++voteCounts.total;
+    console.log(voteCounts);
+
+    var greatPercent = (voteCounts.great/voteCounts.total*100)+'%';
+    console.log(greatPercent);
+    var greatestPercent = (voteCounts.greatest/voteCounts.total*100)+'%';
+
+    $('.great-progress').attr('style', 'width: ' + greatPercent);
+    $('.greatest-progress').attr('style', 'width: ' + greatestPercent);
+});
 
 });
